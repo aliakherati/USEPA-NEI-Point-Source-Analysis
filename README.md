@@ -34,27 +34,27 @@
    └─► Export results (Parquet &/or plots)
    ```
 ## ⚡ Quick-Start
-# 1. Clone the repo
+### 1. Clone the repo
 ```bash
 git clone https://github.com/aliakherati/USEPA-NEI-Point-Source-Analysis.git
 cd USEPA-NEI-Point-Source-Analysis
 ```
 
-# 2. Create & activate a virtual environment (Python 3.10+)
+### 2. Create & activate a virtual environment (Python 3.10+)
 ```bash
 python -m venv .venv
 source .venv/bin/activate     # Windows: .venv\Scripts\activate
 ```
 
-# 3. Install dependencies
+### 3. Install dependencies
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-# 4. Run the example workflow
+### 4. Run the example workflow
 ```bash
-python scripts/main.py --config configs/iron_steel_2022.yml
+python scripts/main.py --config configs/sources.yaml
 ```
 
 ## 🏗️ Repository Layout
@@ -72,7 +72,7 @@ python scripts/main.py --config configs/iron_steel_2022.yml
 └── README.md
 ```
 
-##🔧 Configuration
+## 🔧 Configuration
 Instead of editing code, place run-time options in a simple YAML file:
 ```yaml
 # Data paths
