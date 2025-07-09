@@ -1,0 +1,22 @@
+# Virtual environment
+.venv
+env
+
+# Python cache files
+__pycache__/
+
+# Data files
+*.png
+*.csv
+*.json
+*.txt
+*.log
+*.log.*
+*.log.*.*
+*.log.*.*.*
+
+# Plot files
+plots/
+
+# Mac files
+.DS_Store
