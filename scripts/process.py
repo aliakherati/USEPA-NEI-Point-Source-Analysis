@@ -49,16 +49,16 @@ def filter_scc_data(df: pd.DataFrame, keywords: str | list[str] | None = None, s
     
     return filtered_df
 
-def filter_poll_data(df: pd.DataFrame, poll: str, scc_set: set) -> pd.DataFrame:
+def filter_poll_data(df: pd.DataFrame, poll: str | list[str], scc_set: set) -> pd.DataFrame:
     """
-    Filter dataframe for specific pollutant and valid stack heights, limiting to provided SCCs
+    Filter dataframe for specific pollutant(s) and valid stack heights, limiting to provided SCCs
     
     Parameters
     ----------
     df : pandas.DataFrame
         Input dataframe to filter
-    poll : str
-        Pollutant to filter for
+    poll : str or list of str
+        Pollutant(s) to filter for
     scc_set : set
         Set of SCC codes to filter for
         
@@ -67,8 +67,12 @@ def filter_poll_data(df: pd.DataFrame, poll: str, scc_set: set) -> pd.DataFrame:
     pandas.DataFrame
         Filtered dataframe
     """
+    # Convert single pollutant to list
+    if isinstance(poll, str):
+        poll = [poll]
+        
     filtered_df = df[
-        (df.poll == poll) &
+        (df.poll.isin(poll)) &
         (df.stkhgt.notna()) &
         (df["scc"].isin(scc_set))
     ]
