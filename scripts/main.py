@@ -4,29 +4,29 @@ from pathlib import Path
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import argparse
+import yaml
 from process import filter_scc_data, filter_poll_data
 from read_data import DataReader
 from plot import plot_stack_height_analysis
 
-# Define constants
-SAVE_DIR = Path("plots")
-INPUT_DIR = Path("data/2022hc_cb6_22m/inputs")
-SCC_DIR = Path("data")
-SCC_FILENAME = "SCCDownload-2025-0708-202427.csv"
-
-# Define analysis categories
-ANALYSIS_CATEGORIES = {
-    "iron-and-steel": {
-        "keywords": ["iron", "steel"],
-        "scc_level": 3,
-        "pollutant": "PM25-PRI"
-    },
-    "aluminum": {
-        "keywords": ["aluminum"],
-        "scc_level": 3,
-        "pollutant": "PM25-PRI"
-    }
-}
+def load_config(config_path: str) -> dict:
+    """
+    Load configuration from YAML file.
+    
+    Parameters
+    ----------
+    config_path : str
+        Path to the YAML configuration file
+        
+    Returns
+    -------
+    dict
+        Configuration dictionary
+    """
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
 def analyze_stack_heights(
     data_reader: DataReader,
@@ -67,9 +67,31 @@ def analyze_stack_heights(
     # Plot stack height analysis
     plot_stack_height_analysis(stkhgt_data, save_dir=save_dir, filename=filename)
 
-if __name__ == "__main__":
+def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Analyze stack heights for different industrial categories')
+    parser.add_argument('--config', type=str, required=True, 
+                       help='Path to the YAML configuration file')
+    args = parser.parse_args()
+    
+    # Load configuration
+    config = load_config(args.config)
+    
+    # Extract configuration values
+    data_config = config['data']
+    analysis_categories = config['analysis_categories']
+    
+    # Define paths from config
+    save_dir = Path(data_config['save_dir'])
+    input_dir = Path(data_config['input_dir'])
+    scc_dir = Path(data_config['scc_dir'])
+    scc_filename = data_config['scc_filename']
+    
+    # Create save directory if it doesn't exist
+    save_dir.mkdir(exist_ok=True)
+    
     # Read data
-    data_reader = DataReader(data_dir=INPUT_DIR, scc_dir=SCC_DIR, scc_filename=SCC_FILENAME)
+    data_reader = DataReader(data_dir=input_dir, scc_dir=scc_dir, scc_filename=scc_filename)
     data_reader.read_and_combine_data()
     data_reader.read_scc_data()
 
@@ -80,12 +102,15 @@ if __name__ == "__main__":
     print(f"\nSCC dataframe head: {data_reader.df_scc.head()}\n")
 
     # Analyze stack heights for each category
-    for category, params in ANALYSIS_CATEGORIES.items():
+    for category, params in analysis_categories.items():
         analyze_stack_heights(
             data_reader,
             keywords=params["keywords"],
             scc_level=params["scc_level"],
             pollutant=params["pollutant"],
-            save_dir=SAVE_DIR,
+            save_dir=save_dir,
             filename=f"stack_height_analysis_{category}.png"
         )
+
+if __name__ == "__main__":
+    main()
