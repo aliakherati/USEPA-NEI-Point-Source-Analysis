@@ -1,36 +1,113 @@
-# Analyzing Point Sources from USEPA NEI
+# Analyzing Point Sources in the US EPA National Emissions Inventory (NEI)
 
-## Overview how the repo works
-The goal of this repo is using any version of National Emission Inventory (NEI) to analyze on the stack height for each industry. The way it works is that:
-1. Specify which industry you would like to explore (e.g. iron-and-steel)
-2. Choose key words for the desired industry (e.g. `iron` and `steel`)
-3. Specify SCC levels where you want the keyword search happens
-4. Specify the desired pollutant (e.g. `PM25_PRI`, `PM25_FIL`, `NOx`, `SO2`)
-The code will look for `Active` status and `Point` sources in SCC list and search the keywords within specified SCC levels. Then, it stores the unique SCC numbers. After than, it will read all the input point sources data downloaded from [USEPA website](https://gaftp.epa.gov/Air/emismod/). In this case, I downloaded 2022 point sources data from [here](https://gaftp.epa.gov/Air/emismod/2022/v1/2022emissions/). SCC list can be downloaded from [here](https://sor-scc-api.epa.gov/sccwebservices/sccsearch/).
+> **Goal:** Quickly extract, filter, and analyze point-source emissions (e.g., stack heights) for any industry and pollutant in any NEI release.
 
-## Setup Virtual Environment
-`Python 3.10.14` is used for this repo. To setup the virtual environment please follow these steps:
-1. `python -m venv .venv`
-2. `source .venv/bin/activate`
-3. `pip install --upgrade pip`
-4. `pip install -r requirements.txt`
+---
 
-## Repository Structure
-The repository is organized as follows:
+## ✨ Key Features
+| Feature | What it does |
+|---------|--------------|
+| **Flexible keyword search** | Identify relevant Source Classification Codes (SCCs) with user-supplied keywords at any SCC level. |
+| **Industry-specific queries** | Target a single industry (e.g., *Iron & Steel*) or compare several side-by-side. |
+| **Pollutant filtering** | Focus on one or many pollutants (`PM25_PRI`, `PM25_FIL`, `NOx`, `SO₂`, …). |
+| **End-to-end workflow** | One command ingests raw NEI CSVs, filters SCCs, joins them to emissions data, and exports a tidy dataframe or visualization-ready file. |
+| **Pythonic & reproducible** | Pure-Python project (3.10+) with `pandas` and `polars` back-ends, managed in a virtual environment. |
 
-- `data/`: Directory containing input data files
-  - `2022hc_cb6_22m/inputs/`: Contains CSV files with point source data
-  - `SCCDownload-2025-0708-202427.csv`: Source Classification Code (SCC) reference data
+---
 
-- `scripts/`: Python scripts for data processing and analysis
-  - `main.py`: Main script that orchestrates the data processing workflow
-  - `read_data.py`: Contains `DataReader` class for reading and combining CSV files
-  - `process.py`: Functions for filtering SCC and pollutant data
+## 🗺️ How It Works
+1. **Select an industry**  
+   Define a human-readable name, e.g. `"iron-and-steel"`.
+2. **Provide search keywords**  
+   Any number of terms (`["iron", "steel"]`) matched **case-insensitively** inside SCC descriptions.
+3. **Choose SCC levels**  
+   Tell the script which parts of the hierarchical SCC to search (`LEVEL_TWO`, `LEVEL_THREE`, …).
+4. **Pick pollutants**  
+   List one or more pollutant codes (`["PM25_PRI"]`).
+5. **Run `scripts/main.py`**  
+   The workflow:
+   ```text
+   ┌─► Download / read SCC list (CSV)
+   ├─► Filter SCCs by keyword + “Active” + “Point” status
+   ├─► Read NEI point-source CSVs (parquet coming soon)
+   ├─► Sub-select chosen pollutants
+   └─► Export results (Parquet &/or plots)
+   ```
+## ⚡ Quick-Start
+# 1. Clone the repo
+```bash
+git clone https://github.com/aliakherati/USEPA-NEI-Point-Source-Analysis.git
+cd USEPA-NEI-Point-Source-Analysis
+```
 
-- `requirements.txt`: Lists all Python package dependencies
-- `.venv/`: Python virtual environment directory (created during setup)
+# 2. Create & activate a virtual environment (Python 3.10+)
+```bash
+python -m venv .venv
+source .venv/bin/activate     # Windows: .venv\Scripts\activate
+```
 
-The code reads point source emissions data from CSV files, combines them, and provides filtering capabilities based on Source Classification Codes (SCC) and pollutant types. The `DataReader` class handles file reading and data combination, while separate processing functions in `process.py` handle data filtering and analysis.
+# 3. Install dependencies
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-## To modify
-You can go to `scripts/main.py` and modify `ANALYSIS_CATEGORIES` dictionary.
+# 4. Run the example workflow
+```bash
+python scripts/main.py --config configs/iron_steel_2022.yml
+```
+
+## 🏗️ Repository Layout
+```bash
+.
+├── data/                       # <- Raw & processed data (git-ignored by default)
+│   └── 2022hc_cb6_22m/inputs/  #    NEI 2022 point-source CSVs
+├── scripts/
+│   ├── main.py                 # Workflow orchestrator (entry point)
+│   ├── read_data.py            # DataReader class (lazy CSV reader / concatenator)
+│   ├── plot.py                 # Stack height visualization utilities
+│   └── process.py              # SCC & pollutant filtering utilities
+├── configs/                    # YAML example for repeatable analyses
+├── requirements.txt
+└── README.md
+```
+
+##🔧 Configuration
+Instead of editing code, place run-time options in a simple YAML file:
+```yaml
+# Data paths
+data:
+  save_dir: "plots"
+  input_dir: "data/2022hc_cb6_22m/inputs"
+  scc_dir: "data"
+  scc_filename: "SCCDownload-2025-0708-202427.csv"
+
+# Analysis categories
+analysis_categories:
+  iron-and-steel:
+    keywords: ["iron", "steel"]
+    scc_level: 3
+    pollutant: "PM25-PRI"
+  
+  aluminum:
+    keywords: ["aluminum"]
+    scc_level: 3
+    pollutant: "PM25-PRI"
+```
+Invoke with:
+```bash
+python scripts/main.py --config configs/iron_steel_2022.yml
+```
+
+📊 Data Sources
+| Dataset                                   | URL                                                                                                                  |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **NEI point-source emissions (2022, v1)** | [https://gaftp.epa.gov/Air/emismod/2022/v1/2022emissions/](https://gaftp.epa.gov/Air/emismod/2022/v1/2022emissions/) |
+| **Source Classification Codes (SCC)**     | [https://sor-scc-api.epa.gov/sccwebservices/sccsearch/](https://sor-scc-api.epa.gov/sccwebservices/sccsearch/)       |
+
+## 📜 License
+Distributed under the MIT License. See `LICENSE` for details.
+
+## 🗨️ Contact
+Maintainer • Ali Akherati • aliakherati@outlook.com
+Feel free to reach out with questions, bug reports, or suggestions.
