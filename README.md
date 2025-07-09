@@ -28,10 +28,10 @@
    The workflow:
    ```text
    ┌─► Download / read SCC list (CSV)
-   ├─► Filter SCCs by keyword + “Active” + “Point” status
-   ├─► Read NEI point-source CSVs (parquet coming soon)
+   ├─► Filter SCCs by keyword + “Active” status + “Point” sources
+   ├─► Read NEI point-source CSVs
    ├─► Sub-select chosen pollutants
-   └─► Export results (Parquet &/or plots)
+   └─► Plot results
    ```
 ## ⚡ Quick-Start
 ### 1. Clone the repo
