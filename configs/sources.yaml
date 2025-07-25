@@ -5,7 +5,7 @@ data:
   save_dir: "plots"
   input_dir: "data/2022hc_cb6_22m/inputs"
   scc_dir: "data"
-  scc_filename: "SCCDownload-2025-0708-202427.csv"
+  scc_filename: "SCCDownload-2025-0724-222826.csv"
 
 # Analysis categories
 analysis_categories:
@@ -13,14 +13,14 @@ analysis_categories:
     keywords: ["iron", "steel"]
     scc_level: 3
     pollutant: "PM25-PRI"
-  
+
   aluminum:
     keywords: ["aluminum"]
     scc_level: 3
     pollutant: "PM25-PRI"
-  
+
   # Add more categories as needed
   # cement:
   #   keywords: ["cement", "concrete"]
   #   scc_level: 3
-  #   pollutant: "PM25-PRI" 
+  #   pollutant: "PM25-PRI"
