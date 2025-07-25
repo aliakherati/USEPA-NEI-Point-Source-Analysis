@@ -109,7 +109,7 @@ analysis_categories:
 Invoke with:
 
 ```bash
-python scripts/main.py --config configs/sources.yml
+python scripts/main.py --config configs/sources.yaml
 ```
 
 📊 Data Sources
