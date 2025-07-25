@@ -9,11 +9,6 @@ __pycache__/
 *.png
 *.csv
 *.json
-*.txt
-*.log
-*.log.*
-*.log.*.*
-*.log.*.*.*
 
 # Plot files
 plots/
