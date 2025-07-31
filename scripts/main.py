@@ -67,6 +67,35 @@ def analyze_stack_heights(
     # Plot stack height analysis
     plot_stack_height_analysis(stkhgt_data, save_dir=save_dir, filename=filename)
 
+    # Create bins for stack height categories
+    categories = pd.cut(stkhgt_data,
+                       bins=[0, 10, 100, float('inf')],
+                       labels=['0-10', '10-100', '>100'])
+    
+    # Define category mappings
+    category_data = [
+        (stkhgt_data, 'All'),
+        (stkhgt_data[categories == '0-10'], '0-10m'),
+        (stkhgt_data[categories == '10-100'], '10-100m'), 
+        (stkhgt_data[categories == '>100'], '>100m')
+    ]
+
+    # Get stats for all data and each category
+    stats_text = []
+    for data, label in category_data:
+        stats = data.describe()
+        stats_text.append([
+            stats['max'],
+            stats['min'], 
+            stats['mean'],
+            stats['50%'],
+            stats['25%'],
+            stats['75%'],
+            stats['std'],
+            label
+        ])
+    return [stats_text]
+
 def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Analyze stack heights for different industrial categories')
@@ -102,15 +131,21 @@ def main():
     print(f"\nSCC dataframe head: {data_reader.df_scc.head()}\n")
 
     # Analyze stack heights for each category
+    stats_text = []
     for category, params in analysis_categories.items():
-        analyze_stack_heights(
+        stats = analyze_stack_heights(
             data_reader,
             keywords=params["keywords"],
             scc_level=params["scc_level"],
             pollutant=params["pollutant"],
             save_dir=save_dir,
             filename=f"stack_height_analysis_{category}.png"
-        )
+        )[0]  # Extract inner list
+        for stat in stats:
+            stat.append(category)  # Add category to each stat row
+        stats_text.extend(stats)
+
+    pd.DataFrame(stats_text, columns=["Max", "Min", "Mean", "Median", "25%", "75%", "Std", "height bin", "category"]).to_csv(save_dir / "stack_height_stats.csv")
 
 if __name__ == "__main__":
     main()
