@@ -66,6 +66,7 @@ class DataReader:
             # Convert scc to integer and stkhgt to float
             self.combined_df['scc'] = self.combined_df['scc'].astype('Int64')  # Int64 allows for NaN values
             self.combined_df['stkhgt'] = self.combined_df['stkhgt'].astype('float64')
+            self.combined_df['stkhgt'] = self.combined_df['stkhgt'] * 0.3048 # convert feet to meters
             print(f"\nCombined {len(dataframes)} CSV files into dataframe with shape: {self.combined_df.shape}")
         else:
             print("\nNo CSV files were successfully read")
