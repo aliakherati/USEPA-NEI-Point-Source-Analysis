@@ -112,6 +112,7 @@ def plot_stack_height_analysis(stkhgt_data, save_dir="../plots", filename="stack
     save_path = os.path.join(save_dir, filename)
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     # plt.show()
+    plt.close()
 
     # Print summary statistics for each category
     print("\nSummary statistics by category:")
