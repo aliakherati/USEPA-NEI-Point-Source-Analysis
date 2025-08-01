@@ -34,6 +34,16 @@ analysis_categories:
     scc_level: 2
     pollutant: "PM25-PRI"
 
+  petroleum:
+    keywords: ["Petroleum Industry"]
+    scc_level: 2
+    pollutant: "PM25-PRI"
+
+  # petrochemical-steam-cracking:
+  #   keywords: ["Butylene, Ethylene, Propylene, Olefin Production", "Polyethylene Production"]
+  #   scc_level: 3
+  #   pollutant: "PM25-PRI"
+
   chemical:
     keywords: ["chemical"]
     scc_level: 3
