@@ -78,3 +78,41 @@ def filter_poll_data(df: pd.DataFrame, poll: str | list[str], scc_set: set) -> p
     ]
     
     return filtered_df
+
+def filter_poll_data_with_capacity(df: pd.DataFrame, poll: str | list[str], scc_set: set) -> pd.DataFrame:
+    """
+    Filter dataframe for specific pollutant(s), valid stack heights, and design capacity data, 
+    limiting to provided SCCs
+    
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input dataframe to filter
+    poll : str or list of str
+        Pollutant(s) to filter for
+    scc_set : set
+        Set of SCC codes to filter for
+        
+    Returns
+    -------
+    pandas.DataFrame
+        Filtered dataframe with stkhgt, design_capacity, and design_capacity_units columns
+    """
+    # Convert single pollutant to list
+    if isinstance(poll, str):
+        poll = [poll]
+        
+    # Check if design capacity columns exist
+    required_columns = ['stkhgt', 'design_capacity', 'design_capacity_units']
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    
+    if missing_columns:
+        raise ValueError(f"Missing required columns: {missing_columns}")
+        
+    filtered_df = df[
+        (df.poll.isin(poll)) &
+        (df.stkhgt.notna()) &
+        (df["scc"].isin(scc_set))
+    ]
+    
+    return filtered_df[['stkhgt', 'design_capacity', 'design_capacity_units']]
