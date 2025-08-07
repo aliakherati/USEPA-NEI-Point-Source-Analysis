@@ -9,15 +9,15 @@ data:
 
 # Analysis categories
 analysis_categories:
-  iron-and-steel:
-    keywords: ["iron", "steel"]
-    scc_level: 3
-    pollutant: "PM25-PRI"
+  # iron-and-steel:
+  #   keywords: ["iron", "steel"]
+  #   scc_level: 3
+  #   pollutant: "PM25-PRI"
 
-  aluminum:
-    keywords: ["aluminum"]
-    scc_level: 3
-    pollutant: "PM25-PRI"
+  # aluminum:
+  #   keywords: ["aluminum"]
+  #   scc_level: 3
+  #   pollutant: "PM25-PRI"
   
   # ship-and-vessel:
   #   keywords: ["ship", "vessel"]
@@ -29,35 +29,35 @@ analysis_categories:
     scc_level: 2
     pollutant: "PM25-PRI"
 
-  oil-and-gas:
-    keywords: ["oil and gas"]
-    scc_level: 2
-    pollutant: "PM25-PRI"
+  # oil-and-gas:
+  #   keywords: ["oil and gas"]
+  #   scc_level: 2
+  #   pollutant: "PM25-PRI"
 
-  petroleum:
-    keywords: ["Petroleum Industry"]
-    scc_level: 2
-    pollutant: "PM25-PRI"
+  # petroleum:
+  #   keywords: ["Petroleum Industry"]
+  #   scc_level: 2
+  #   pollutant: "PM25-PRI"
 
   # petrochemical-steam-cracking:
   #   keywords: ["Butylene, Ethylene, Propylene, Olefin Production", "Polyethylene Production"]
   #   scc_level: 3
   #   pollutant: "PM25-PRI"
 
-  chemical:
-    keywords: ["chemical"]
-    scc_level: 3
-    pollutant: "PM25-PRI"
+  # chemical:
+  #   keywords: ["chemical"]
+  #   scc_level: 3
+  #   pollutant: "PM25-PRI"
 
-  pulp-and-paper:
-    keywords: ["pulp and paper"]
-    scc_level: 2
-    pollutant: "PM25-PRI"
+  # pulp-and-paper:
+  #   keywords: ["pulp and paper"]
+  #   scc_level: 2
+  #   pollutant: "PM25-PRI"
 
-  copper:
-    keywords: ["copper"]
-    scc_level: 3
-    pollutant: "PM25-PRI"
+  # copper:
+  #   keywords: ["copper"]
+  #   scc_level: 3
+  #   pollutant: "PM25-PRI"
 
   # Add more categories as needed
   # cement:
